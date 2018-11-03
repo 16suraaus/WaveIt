@@ -13,7 +13,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <Button
+        <!--Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/scan_barcode"
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/front_camera"
-            android:onClick="scanBarcodeFrontCamera"/>
+            android:onClick="scanBarcodeFrontCamera"/-->
 
         <fragment
             android:id="@+id/fragment_scan"
@@ -69,7 +69,7 @@
             android:text="@string/custom_activity"
             android:onClick="scanContinuous"/>
 
-        <Button
+        <!--Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_activity"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about"
-            android:onClick="about"/>
+            android:onClick="about"/-->
 
 
     </LinearLayout>
