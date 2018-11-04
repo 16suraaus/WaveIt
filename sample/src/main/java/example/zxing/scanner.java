@@ -3,7 +3,8 @@ import android.util.Log;
 
 import java.util.*;
 public class scanner {
-    ArrayList<locCod> scanned = new ArrayList<locCod>();
+    ArrayList<locCod> scannedCorrect = new ArrayList<locCod>();
+    ArrayList<locCod> scannedWrong = new ArrayList<locCod>();
     public class locCod<X,Y,Z> {
         public String X;
         public int Y;
@@ -41,26 +42,30 @@ public class scanner {
         Log.d("input ordered",data);
         locCod input = string_to_locCod(data);
 
-        if(this.scanned.size()!=0) {
-            Log.d("scanned size", Integer.toString(this.scanned.size()));
-            locCod prev = this.scanned.get(this.scanned.size() - 1);
+        if(this.scannedCorrect.size()!=0) {
+            locCod prev = this.scannedCorrect.get(this.scannedCorrect.size() - 1);
             if (prev.gr(input)) {
-                Log.d("entered geq", input.X + " " + prev.X);
-                this.scanned.add(input);
+                this.scannedWrong.add(input);
+                return true; // true == Wrong
+            }
+        }
+        this.scannedCorrect.add(input);
+        return false; //false == correct
+    }
+    public boolean inputOdd(String data) {
+        locCod input = string_to_locCod(data);
+        if (this.scannedCorrect.size() != 0) {
+            locCod prev = this.scannedCorrect.get(this.scannedCorrect.size() - 1);
+            if (input.X.compareTo(prev.X) != 0 || input.Y != prev.Y) {
+                this.scannedWrong.add(input);
                 return true;
             }
         }
-        this.scanned.add(input);
-        Log.d("returning True",input.X);
+        this.scannedCorrect.add(input);
         return false;
     }
-    public boolean inputOdd(String data){
-        locCod input = string_to_locCod(data);
-        this.scanned.add(input);
-        if(this.scanned.size()==0) {
-            locCod prev = this.scanned.get(this.scanned.size() - 1);
-            return input.X.compareTo(prev.X)==0 && input.Y==prev.Y;
-        }
-        return true;
+    public void clearLists() {
+        this.scannedCorrect.clear();
+        this.scannedWrong.clear();
     }
 }
