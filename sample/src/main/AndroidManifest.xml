@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ContinuousCaptureActivity"></activity>
+        <activity android:name=".ContinuousCaptureActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".AnyOrientationCaptureActivity"
             android:screenOrientation="fullSensor"
