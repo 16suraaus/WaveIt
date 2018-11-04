@@ -56,14 +56,25 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/centerHorizont" />
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/centerHorizont"
+        android:layout_toRightOf="@+id/centerHorizont"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/buttonsLayout"
-        android:id="@+id/barcodePreview" />
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/buttonsLayout"
+            android:id="@+id/barcodePreview" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="'o' is correct, 'x' is incorrect"
+            android:id="@+id/bookListText"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
