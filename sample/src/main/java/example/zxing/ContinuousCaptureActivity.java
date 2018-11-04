@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
@@ -47,6 +48,8 @@ public class ContinuousCaptureActivity extends Activity {
     private Button resetButton;
     private TextView bookListText;
     private Button helpbutton;
+    private Button drugSubmitButton;
+
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
@@ -56,6 +59,13 @@ public class ContinuousCaptureActivity extends Activity {
                 sc.clearLists();
             }
             lastSpinnerState = spinner.getSelectedItem().toString();
+            if(spinner.getSelectedItem().toString().equals("Drug Info")){
+                drugSubmitButton.setVisibility(View.VISIBLE);
+                bookListText.setVisibility(View.INVISIBLE);
+            }else{
+                drugSubmitButton.setVisibility(View.INVISIBLE);
+                bookListText.setVisibility(View.VISIBLE);
+            }
 
             if(result.getText() == null || result.getText().equals(lastText)) {
                 // Prevent duplicate scans
@@ -66,13 +76,27 @@ public class ContinuousCaptureActivity extends Activity {
 
             //beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
             if(spinner.getSelectedItem().toString().equals("Odd One Out")) {
-                beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+                try {
+                    beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+                }
+                catch(Exception e) {
+                    String message = "Error, QR code must be Library of Congress classification.";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Ordered Books")){
-                beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+                try {
+                    beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+                }
+                catch(Exception e) {
+                    String message = "Error, QR code must be Library of Congress classification.";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Drug Info")){
-                dis.makeSearch("207106");
+                dis.add_data(lastText);
                 beepManager.playBeepSoundAndVibrate(false);
             }else{
                 Log.d("spinner", spinner.getSelectedItem().toString());
@@ -107,8 +131,10 @@ public class ContinuousCaptureActivity extends Activity {
         spinner = findViewById(R.id.modeSpinner);
         lastSpinnerState = "";
         bookListText = findViewById(R.id.bookListText);
+        drugSubmitButton = findViewById(R.id.drugSubmitButton);
 
         resetClicked();
+        drugSubmitClicked();
         helpbuttonMethod();
     }
 
@@ -135,6 +161,32 @@ public class ContinuousCaptureActivity extends Activity {
                 lastText = "";
                 bookListText.setText("'o' is correct, 'x' is incorrect");
                 sc.clearLists();
+            }
+        });
+    }
+
+    public void drugSubmitClicked(){
+
+        drugSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String searchResults = dis.search_and_output();
+                dis.clear_data();
+
+                AlertDialog alertDialog = new AlertDialog.Builder(ContinuousCaptureActivity.this).create();
+                alertDialog.setTitle("Usage");
+                SpannableStringBuilder str = new SpannableStringBuilder(searchResults);
+
+                alertDialog.setMessage(str);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                drugSubmitButton.setVisibility(View.INVISIBLE);
             }
         });
     }
