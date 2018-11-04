@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,9 +36,17 @@ public class ContinuousCaptureActivity extends Activity {
     private String lastText;
     private Spinner spinner;
     private scanner sc;
+    String lastSpinnerState;
+
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
+            if(!spinner.getSelectedItem().toString().equals(lastSpinnerState)){
+                lastText = "";
+                sc.clearLists();
+            }
+            lastSpinnerState = spinner.getSelectedItem().toString();
+
             if(result.getText() == null || result.getText().equals(lastText)) {
                 // Prevent duplicate scans
                 return;
@@ -46,9 +55,13 @@ public class ContinuousCaptureActivity extends Activity {
             barcodeView.setStatusText(result.getText());
 
             //beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
-            beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
-
-
+            if(spinner.getSelectedItem().toString().equals("Odd One Out")) {
+                beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+            }else if(spinner.getSelectedItem().toString().equals("Ordered Books")){
+                beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+            }else{
+                Log.d("spinner", spinner.getSelectedItem().toString());
+            }
 
             //Added preview of scanned barcode
             ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
@@ -75,6 +88,8 @@ public class ContinuousCaptureActivity extends Activity {
         beepManager = new BeepManager(this);
 
         sc = new scanner();
+        spinner = findViewById(R.id.modeSpinner);
+        lastSpinnerState = "";
     }
 
     @Override

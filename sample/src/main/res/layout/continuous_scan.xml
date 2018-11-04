@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:entries="@array/spinnerItems">
-
+            android:entries="@array/spinnerItems"
+            android:id="@+id/modeSpinner">
         </Spinner>
     </LinearLayout>
 
