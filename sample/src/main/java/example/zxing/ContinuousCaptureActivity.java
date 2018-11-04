@@ -37,6 +37,7 @@ public class ContinuousCaptureActivity extends Activity {
     private String lastText;
     private Spinner spinner;
     private scanner sc;
+    private drugInfoScanner dis;
     String lastSpinnerState;
     private Button resetButton;
 
@@ -61,6 +62,9 @@ public class ContinuousCaptureActivity extends Activity {
                 beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
             }else if(spinner.getSelectedItem().toString().equals("Ordered Books")){
                 beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+            }else if(spinner.getSelectedItem().toString().equals("Drug Info")){
+                dis.makeSearch("207106");
+                beepManager.playBeepSoundAndVibrate(false);
             }else{
                 Log.d("spinner", spinner.getSelectedItem().toString());
             }
@@ -90,6 +94,7 @@ public class ContinuousCaptureActivity extends Activity {
         beepManager = new BeepManager(this);
 
         sc = new scanner();
+        dis = new drugInfoScanner(this);
         spinner = findViewById(R.id.modeSpinner);
         lastSpinnerState = "";
 

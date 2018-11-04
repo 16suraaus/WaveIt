@@ -19,7 +19,7 @@ public class drugInfoScanner{
     public drugInfoScanner(Context context) {
         c = context;
     }
-    private void makeSearch(String drugID){
+    void makeSearch(String drugID){
         new FetchNetworkData().execute(drugID);
     }
 
@@ -27,12 +27,12 @@ public class drugInfoScanner{
         @Override
         protected String doInBackground(String... params){
             if (params.length == 0) return null;
-            String searchQuery = "";
-            for (String Drug : params){
-                searchQuery += Drug+"+";
-            }
-            searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
-
+            //String searchQuery = "";
+            //for (String Drug : params){
+            //    searchQuery += Drug+"+";
+            //}
+            //searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
+            String searchQuery = "207106";
             URL DRUGINFO_URL = NetworkUtils.buildUrl(searchQuery);
 
             String responseString = null;
@@ -41,7 +41,11 @@ public class drugInfoScanner{
             } catch(Exception e) {
                 e.printStackTrace();
             }
-            Log.d("response Json", responseString);
+            if (responseString == null){
+                Log.d("this is shit", "what is this");
+            }else {
+                Log.d("response Json", responseString);
+            }
             return "worked";
         }   // end of method doInBackground
 

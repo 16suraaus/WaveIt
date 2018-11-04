@@ -11,19 +11,20 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
-    static final String DRUGINFO_URL = "https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=";
+    static final String DRUGINFO_URL = "https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=207106";
 
     public static URL buildUrl(String userQuery){
 
         Uri builtUri = null;
         // Different uri building depending on if it's a weather uri or location uri
-        builtUri = Uri.parse(DRUGINFO_URL).buildUpon()
-                    .appendPath(userQuery)
-                    .build();
+        //builtUri = Uri.parse(DRUGINFO_URL).buildUpon()
+        //            .appendQueryParameter("rxcuis",userQuery)
+        //            .build();
         URL url = null;
         try{
-            url = new URL(builtUri.toString());
-            Log.d("informational", "URL: " + builtUri.toString());
+            url = new URL(DRUGINFO_URL);
+            Log.d("build url", DRUGINFO_URL+userQuery);
+            //Log.d("informational", "URL: " + builtUri.toString());
 
         }catch (MalformedURLException e){
             e.printStackTrace();
