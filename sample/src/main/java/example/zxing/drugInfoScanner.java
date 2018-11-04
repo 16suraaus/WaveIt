@@ -44,13 +44,28 @@ public class drugInfoScanner{
         this.drugs.clear();
         this.output.clear();
     }
-    // After done inputting, search for interactions
-    public void search(){
+    // After done inputting, search for interactions and output string
+    public String search_and_output() {
         String[] drugID = new String[this.drugs.size()];
-        for (int i = 0; i < this.drugs.size(); i++){
+        for (int i = 0; i < this.drugs.size(); i++) {
             drugID[i] = this.drugs.get(i);
         }
         new FetchNetworkData().execute(drugID);
+        String output = "";
+        for (int i = 0; i < this.output.size(); i++){
+            drugInfo curr = this.output.get(i);
+            String[] names = curr.drugs;
+            output += "Drugs are:";
+            for (String name : names){
+                output += " " + name;
+            }
+            output += "\n";
+            output += "Severity: " + curr.severity + "\n";
+            output += "Description: " + curr.interaction + "\n\n";
+        }
+        // Remove last two newline characters
+        output = output.substring(0, output.length() - 2);
+        return output;
     }
     public void updateDrugInfo(List<drugInfo> info){
         this.output = info;
@@ -72,7 +87,6 @@ public class drugInfoScanner{
             } catch(Exception e) {
                 e.printStackTrace();
             }
-
             return responseString;
         }   // end of method doInBackground
 
@@ -108,11 +122,9 @@ public class drugInfoScanner{
         }   // end of class FetchNetworkData
         @Override
         protected void onPostExecute(String responseData){
-
             updateDrugInfo(processDrugInfoJson(responseData));
-            String message = "Ouput sent!";
+            String message = "Analyzing interactions!";
             Toast.makeText(c, message, Toast.LENGTH_LONG).show();
-
         }
     }
 }
