@@ -46,6 +46,9 @@ public class drugInfoScanner{
     }
     // After done inputting, search for interactions and output string
     public String search_and_output() {
+        if (this.drugs.size() < 2){
+            return "Output more than 1 drugs!";
+        }
         String[] drugID = new String[this.drugs.size()];
         for (int i = 0; i < this.drugs.size(); i++) {
             drugID[i] = this.drugs.get(i);
