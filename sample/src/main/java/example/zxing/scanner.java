@@ -5,6 +5,15 @@ import java.util.*;
 public class scanner {
     ArrayList<locCod> scannedCorrect = new ArrayList<locCod>();
     ArrayList<locCod> scannedWrong = new ArrayList<locCod>();
+    ArrayList<book> bookList = new ArrayList<book>();
+    public class book{
+        public locCod libConCode;
+        public Boolean correct;
+        public book(locCod in1, Boolean in2){
+            this.libConCode = in1;
+            this.correct = in2;
+        }
+    }
     public class locCod<X,Y,Z> {
         public String X;
         public int Y;
@@ -46,9 +55,11 @@ public class scanner {
             locCod prev = this.scannedCorrect.get(this.scannedCorrect.size() - 1);
             if (prev.gr(input)) {
                 this.scannedWrong.add(input);
+                this.bookList.add(new book(input,false));
                 return true; // true == Wrong
             }
         }
+        this.bookList.add(new book(input,true));
         this.scannedCorrect.add(input);
         return false; //false == correct
     }
@@ -57,15 +68,18 @@ public class scanner {
         if (this.scannedCorrect.size() != 0) {
             locCod prev = this.scannedCorrect.get(this.scannedCorrect.size() - 1);
             if (input.X.compareTo(prev.X) != 0 || input.Y != prev.Y) {
+                this.bookList.add(new book(input,false));
                 this.scannedWrong.add(input);
                 return true;
             }
         }
         this.scannedCorrect.add(input);
+        this.bookList.add(new book(input,true));
         return false;
     }
     public void clearLists() {
         this.scannedCorrect.clear();
         this.scannedWrong.clear();
+        this.bookList.clear();
     }
 }
