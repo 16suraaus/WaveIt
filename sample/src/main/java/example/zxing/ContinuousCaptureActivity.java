@@ -1,9 +1,13 @@
 package example.zxing;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,7 +46,7 @@ public class ContinuousCaptureActivity extends Activity {
     String lastSpinnerState;
     private Button resetButton;
     private TextView bookListText;
-
+    private Button helpbutton;
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
@@ -105,6 +109,7 @@ public class ContinuousCaptureActivity extends Activity {
         bookListText = findViewById(R.id.bookListText);
 
         resetClicked();
+        helpbuttonMethod();
     }
 
     @Override
@@ -130,6 +135,38 @@ public class ContinuousCaptureActivity extends Activity {
                 lastText = "";
                 bookListText.setText("'o' is correct, 'x' is incorrect");
                 sc.clearLists();
+            }
+        });
+    }
+
+    public void helpbuttonMethod(){
+        helpbutton = findViewById(R.id.helpbutton);
+
+        helpbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(ContinuousCaptureActivity.this).create();
+                alertDialog.setTitle("Usage");
+                SpannableStringBuilder str = new SpannableStringBuilder("Odd One Out: Gets category from first book scanned. Any further books" +
+                        " are checked against the book.\n\nOrdered Books: Checks the sequential order of books scanned.\n\n" +
+                        "" +
+                        "Reset Items: clears the cache of books.\n\n" +
+                        "Drug Info: Enters Drug Safety Mode.");
+                str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 101, 114, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 161, 174, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 204, 213, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+
+                alertDialog.setMessage(str);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
     }
