@@ -43,10 +43,11 @@ public class drugInfoScanner{
             }
             if (responseString == null){
                 Log.d("this is shit", "what is this");
+                return "there is no response";
             }else {
                 Log.d("response Json", responseString);
+                return "there is response";
             }
-            return "worked";
         }   // end of method doInBackground
 
         // parse weather data json
