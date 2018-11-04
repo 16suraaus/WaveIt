@@ -43,6 +43,11 @@
             android:entries="@array/spinnerItems"
             android:id="@+id/modeSpinner">
         </Spinner>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset Items"
+            android:id="@+id/resetButton" />
     </LinearLayout>
 
     <View
@@ -59,5 +64,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/buttonsLayout"
         android:id="@+id/barcodePreview" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

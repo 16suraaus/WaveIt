@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -37,6 +38,7 @@ public class ContinuousCaptureActivity extends Activity {
     private Spinner spinner;
     private scanner sc;
     String lastSpinnerState;
+    private Button resetButton;
 
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
@@ -90,6 +92,8 @@ public class ContinuousCaptureActivity extends Activity {
         sc = new scanner();
         spinner = findViewById(R.id.modeSpinner);
         lastSpinnerState = "";
+
+        resetClicked();
     }
 
     @Override
@@ -104,6 +108,18 @@ public class ContinuousCaptureActivity extends Activity {
         super.onPause();
 
         barcodeView.pause();
+    }
+
+    public void resetClicked(){
+        resetButton = findViewById(R.id.resetButton);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lastText = "";
+                sc.clearLists();
+            }
+        });
     }
 
     public void pause(View view) {
