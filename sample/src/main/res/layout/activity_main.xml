@@ -77,8 +77,9 @@
             android:gravity="center"/>
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            android:layout_gravity="center"
             android:src="@mipmap/waveit_icon_layer" />
 
         <LinearLayout
@@ -97,6 +98,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Austin Sura, Chan Hee Song, Nicholas Marcopoli, Sung Hyun Shin"
                 android:textSize="12dp"/>
 
