@@ -3,9 +3,13 @@ package example.zxing;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
@@ -28,6 +32,7 @@ public class ContinuousCaptureActivity extends Activity {
     private DecoratedBarcodeView barcodeView;
     private BeepManager beepManager;
     private String lastText;
+    private Spinner spinner;
 
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override

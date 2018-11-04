@@ -12,6 +12,7 @@
 
     </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -31,6 +32,17 @@
             android:layout_height="wrap_content"
             android:text="Resume"
             android:onClick="resume" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Sorting Mode:"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:entries="@array/spinnerItems">
+
+        </Spinner>
     </LinearLayout>
 
     <View
