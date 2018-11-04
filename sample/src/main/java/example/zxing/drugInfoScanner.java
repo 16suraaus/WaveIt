@@ -47,33 +47,25 @@ public class drugInfoScanner{
     // After done inputting, search for interactions and output string
     public String search_and_output() {
         if (this.drugs.size() < 2){
-            return "Output more than 1 drugs!";
+            return "Input more than 1 drugs!";
         }
         String[] drugID = new String[this.drugs.size()];
         for (int i = 0; i < this.drugs.size(); i++) {
             drugID[i] = this.drugs.get(i);
         }
-        new FetchNetworkData().execute(drugID);
+
         String output = "";
-        for (int i = 0; i < this.output.size(); i++){
-            drugInfo curr = this.output.get(i);
-            String[] names = curr.drugs;
-            output += "Drugs are:";
-            for (String name : names){
-                output += " " + name;
-            }
-            output += "\n";
-            output += "Severity: " + curr.severity + "\n";
-            output += "Description: " + curr.interaction + "\n\n";
-        }
-        // Remove last two newline characters
-        output = output.substring(0, output.length() - 2);
+        new FetchNetworkData().execute(drugID);
         return output;
     }
+
     public void updateDrugInfo(List<drugInfo> info){
         this.output = info;
     }
     public class FetchNetworkData extends AsyncTask<String, Void, String> {
+
+        public AsyncResponse delegate = null;
+
         @Override
         protected String doInBackground(String... params){
             if (params.length == 0) return null;
@@ -125,9 +117,25 @@ public class drugInfoScanner{
         }   // end of class FetchNetworkData
         @Override
         protected void onPostExecute(String responseData){
-            updateDrugInfo(processDrugInfoJson(responseData));
+            List<drugInfo> info = processDrugInfoJson(responseData);
+            updateDrugInfo(info);
             String message = "Analyzing interactions!";
             Toast.makeText(c, message, Toast.LENGTH_LONG).show();
+            String output = "";
+            for (int i = 0; i < info.size(); i++){
+                drugInfo curr = info.get(i);
+                String[] names = curr.drugs;
+                output += "Drugs are:";
+                for (String name : names){
+                    output += " " + name;
+                }
+                output += "\n";
+                output += "Severity: " + curr.severity + "\n";
+                output += "Description: " + curr.interaction + "\n\n";
+            }
+            // Remove last two newline characters
+            output = output.substring(0, output.length() - 2);
+            delegate.processFinish(output);
         }
     }
 }
