@@ -165,6 +165,8 @@ public class ContinuousCaptureActivity extends Activity {
                 lastText = "";
                 bookListText.setText("'o' is correct, 'x' is incorrect");
                 sc.clearLists();
+                dis.clear_data();
+                drugSubmitButton.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -178,31 +180,46 @@ public class ContinuousCaptureActivity extends Activity {
                 String result = "";
                 try{
                     JSONObject drugData = new JSONObject(searchResults);
-                    JSONArray drugArray = drugData.getJSONArray("fullInteractionType");
+                    JSONArray drugArray = drugData.getJSONArray("fullInteractionTypeGroup");
+                    //Log.d("xxresult", drugArray.toString());
                     for (int i = 0; i < drugArray.length(); i++){
-                        JSONObject tmp = drugArray.getJSONObject(i);
+                        JSONObject temp = drugArray.getJSONObject(i);
+                        Log.d("xxresult_0", temp.toString());
+                        JSONObject tmp = temp.getJSONArray("fullInteractionType").getJSONObject(0);
                         JSONArray names = tmp.getJSONArray("minConcept");
-                        String[] name = new String[2];
+                        Log.d("xxresult_1", names.toString());
                         result += "Drugs are:";
+                        // Add names
                         for (int j = 0; j < names.length(); j++){
-                            JSONObject name_object = names.getJSONObject(i);
-                            result += " " + name[j];
+                            JSONObject name_object = names.getJSONObject(j);
+                            Log.d("xxresult_2", name_object.toString());
+                            result += "\n" + Integer.toString(j+1) + ": " + name_object.getString("name");
                         }
-                        JSONObject indiv = tmp.getJSONObject("interactionPair");
+                        JSONObject indiv = tmp.getJSONArray("interactionPair").getJSONObject(0);
+                        Log.d("xxresult_3", indiv.toString());
                         String severity = indiv.getString("severity");
                         String description = indiv.getString("description");
                         result += "\n";
+                        Log.d("xxresult_4", result);
+                        if (severity.equals("N/A")){
+                            severity = "Low";
+                        }
                         result += "Severity: " + severity + "\n";
+                        Log.d("xxresult_5", result);
                         result += "Description: " + description + "\n\n";
+                        Log.d("xxresult_6", result);
                     }
                 }
                 catch(JSONException e){
                     e.printStackTrace();
                 }
                 dis.clear_data();
+                if (result.equals("")){
+                    result = "No known interactions!";
+                }
 
                 AlertDialog alertDialog = new AlertDialog.Builder(ContinuousCaptureActivity.this).create();
-                alertDialog.setTitle("Usage");
+                alertDialog.setTitle("Interaction");
                 SpannableStringBuilder str = new SpannableStringBuilder(result);
 
                 alertDialog.setMessage(str);

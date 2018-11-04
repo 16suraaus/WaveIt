@@ -23,29 +23,15 @@ public class drugInfoScanner{
     public drugInfoScanner(Context context) {
         c = context;
     }
-    List<drugInfo> output = new ArrayList<>();
     List<String> drugs = new ArrayList<>();
     String json = "";
 
-    // Drug interaction info object to return
-    public class drugInfo{
-        public String[] drugs;
-        public String interaction;
-        public String severity;
-
-        public drugInfo(){
-            this.drugs = null;
-            this.interaction = "";
-            this.severity = "";
-        }
-    }
     // Add drug id to the current list
     public void add_data(String drug){
         this.drugs.add(drug);
     }
     public void clear_data(){
         this.drugs.clear();
-        this.output.clear();
     }
     // After done inputting, search for interactions and output string
     public String search_and_output() {
@@ -67,9 +53,6 @@ public class drugInfoScanner{
         return this.json;
     }
 
-    public void updateDrugInfo(List<drugInfo> info){
-        this.output = info;
-    }
     public void update(String input){
         this.json = input;
     }
@@ -100,42 +83,11 @@ public class drugInfoScanner{
             return responseString;
         }   // end of method doInBackground
 
-        // parse weather data json
-        public List<drugInfo> processDrugInfoJson(String responseJsonData){
-            List<drugInfo> output = new ArrayList<>();
-            try{
-                JSONObject drugData = new JSONObject(responseJsonData);
-                JSONArray drugArray = drugData.getJSONArray("fullInteractionType");
-                for (int i = 0; i < drugArray.length(); i++){
-                    drugInfo current = new drugInfo();
-                    JSONObject tmp = drugArray.getJSONObject(i);
-                    JSONArray names = tmp.getJSONArray("minConcept");
-                    String[] name = new String[2];
-                    for (int j = 0; j < names.length(); j++){
-                        JSONObject name_object = names.getJSONObject(i);
-                        name[j] = name_object.getString("name");
-                    }
-                    JSONObject indiv = tmp.getJSONObject("interactionPair");
-                    String severity = indiv.getString("severity");
-                    String description = indiv.getString("description");
-                    current.drugs = name;
-                    current.severity = severity;
-                    current.interaction = description;
-                    output.add(current);
-                }
-            }
-            catch(JSONException e){
-                e.printStackTrace();
-            }
-            return output;
-
-        }   // end of class FetchNetworkData
+        // end of class FetchNetworkData
         @Override
         protected void onPostExecute(String responseData){
             //List<drugInfo> info = processDrugInfoJson(responseData);
             //updateDrugInfo(info);
-            String message = "Analyzing interactions!";
-            Toast.makeText(c, message, Toast.LENGTH_LONG).show();
 
             //delegate.processFinish("null");
         }
