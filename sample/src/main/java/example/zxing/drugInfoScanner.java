@@ -54,8 +54,27 @@ public class drugInfoScanner{
             drugID[i] = this.drugs.get(i);
         }
 
-        String output = "";
         new FetchNetworkData().execute(drugID);
+        try {
+            Thread.sleep(5000);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        String output = "";
+        for (int i = 0; i < this.output.size(); i++){
+            drugInfo curr = this.output.get(i);
+            String[] names = curr.drugs;
+            output += "Drugs are:";
+            for (String name : names){
+                output += " " + name;
+            }
+            output += "\n";
+            output += "Severity: " + curr.severity + "\n";
+            output += "Description: " + curr.interaction + "\n\n";
+        }
+        // Remove last two newline characters
+        output = output.substring(0, output.length() - 2);
+
         return output;
     }
 
@@ -121,21 +140,8 @@ public class drugInfoScanner{
             updateDrugInfo(info);
             String message = "Analyzing interactions!";
             Toast.makeText(c, message, Toast.LENGTH_LONG).show();
-            String output = "";
-            for (int i = 0; i < info.size(); i++){
-                drugInfo curr = info.get(i);
-                String[] names = curr.drugs;
-                output += "Drugs are:";
-                for (String name : names){
-                    output += " " + name;
-                }
-                output += "\n";
-                output += "Severity: " + curr.severity + "\n";
-                output += "Description: " + curr.interaction + "\n\n";
-            }
-            // Remove last two newline characters
-            output = output.substring(0, output.length() - 2);
-            delegate.processFinish(output);
+
+            //delegate.processFinish("null");
         }
     }
 }
