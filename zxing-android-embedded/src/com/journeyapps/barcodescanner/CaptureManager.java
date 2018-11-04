@@ -74,7 +74,7 @@ public class CaptureManager {
         @Override
         public void barcodeResult(final BarcodeResult result) {
             barcodeView.pause();
-            beepManager.playBeepSoundAndVibrate();
+            beepManager.playBeepSoundAndVibrate(false);
 
             handler.post(new Runnable() {
                 @Override

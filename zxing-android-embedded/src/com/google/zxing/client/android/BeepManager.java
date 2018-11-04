@@ -79,9 +79,12 @@ public final class BeepManager {
     }
 
     @SuppressLint("MissingPermission")
-    public synchronized void playBeepSoundAndVibrate() {
+    public synchronized void playBeepSoundAndVibrate(boolean error) {
         if (beepEnabled) {
-            playBeepSound();
+            if(error)
+                playBeepSound(true);
+            else
+                playBeepSound(false);
         }
         if (vibrateEnabled) {
             Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -92,7 +95,7 @@ public final class BeepManager {
     }
 
 
-    public MediaPlayer playBeepSound() {
+    public MediaPlayer playBeepSound(boolean error) {
         MediaPlayer mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -113,7 +116,11 @@ public final class BeepManager {
             }
         });
         try {
-            AssetFileDescriptor file = context.getResources().openRawResourceFd(R.raw.zxing_beep);
+            AssetFileDescriptor file;
+            if(!error)
+                file = context.getResources().openRawResourceFd(R.raw.zxing_beep);
+            else
+                file = context.getResources().openRawResourceFd(R.raw.zxing_beep_wrong);
             try {
                 mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
             } finally {
