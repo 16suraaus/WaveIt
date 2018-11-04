@@ -1,5 +1,7 @@
 # WaveIt
 
+[Project Presentation](https://docs.google.com/presentation/d/1v77355-3u7jdlaBFPJn99dseQOhSDQ06xRQhjb_wIic/edit?usp=sharing)
+
 Austin Sura, Chan Hee Song, Nicholas Marcopoli, Sung Hyun Shin
 
 QR code scanning tool using [ZXing][2] for decoding.
