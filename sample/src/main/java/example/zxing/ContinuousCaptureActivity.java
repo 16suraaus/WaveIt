@@ -27,6 +27,10 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -171,11 +175,35 @@ public class ContinuousCaptureActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String searchResults = dis.search_and_output();
+                String result = "";
+                try{
+                    JSONObject drugData = new JSONObject(searchResults);
+                    JSONArray drugArray = drugData.getJSONArray("fullInteractionType");
+                    for (int i = 0; i < drugArray.length(); i++){
+                        JSONObject tmp = drugArray.getJSONObject(i);
+                        JSONArray names = tmp.getJSONArray("minConcept");
+                        String[] name = new String[2];
+                        result += "Drugs are:";
+                        for (int j = 0; j < names.length(); j++){
+                            JSONObject name_object = names.getJSONObject(i);
+                            result += " " + name[j];
+                        }
+                        JSONObject indiv = tmp.getJSONObject("interactionPair");
+                        String severity = indiv.getString("severity");
+                        String description = indiv.getString("description");
+                        result += "\n";
+                        result += "Severity: " + severity + "\n";
+                        result += "Description: " + description + "\n\n";
+                    }
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
                 dis.clear_data();
 
                 AlertDialog alertDialog = new AlertDialog.Builder(ContinuousCaptureActivity.this).create();
                 alertDialog.setTitle("Usage");
-                SpannableStringBuilder str = new SpannableStringBuilder(searchResults);
+                SpannableStringBuilder str = new SpannableStringBuilder(result);
 
                 alertDialog.setMessage(str);
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
