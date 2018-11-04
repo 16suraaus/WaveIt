@@ -1,4 +1,6 @@
 package example.zxing;
+import android.util.Log;
+
 import java.util.*;
 public class scanner {
     ArrayList<locCod> scanned = new ArrayList<locCod>();
@@ -16,7 +18,7 @@ public class scanner {
             this.Y = -1;
             this.Z = "";
         }
-        boolean geq(locCod other){
+        boolean gr(locCod other){
             if(this.X.compareTo(other.X)<0){
                 return false;
             }
@@ -25,7 +27,7 @@ public class scanner {
                     return false;
                 }
                 else if(this.Y == other.Y){
-                    return this.Z.compareTo(other.Z)>=0;
+                    return this.Z.compareTo(other.Z)>0;
                 }
             }
             return true;
@@ -36,15 +38,21 @@ public class scanner {
         return new locCod(code[0],Integer.parseInt(code[1]),code[2]);
     }
     public boolean inputOrdered(String data){
+        Log.d("input ordered",data);
         locCod input = string_to_locCod(data);
-        this.scanned.add(input);
-        if(this.scanned.size()==0){
-            locCod prev = this.scanned.get(this.scanned.size()-1);
-            if(input.geq(prev)){
-                return false;
+
+        if(this.scanned.size()!=0) {
+            Log.d("scanned size", Integer.toString(this.scanned.size()));
+            locCod prev = this.scanned.get(this.scanned.size() - 1);
+            if (prev.gr(input)) {
+                Log.d("entered geq", input.X + " " + prev.X);
+                this.scanned.add(input);
+                return true;
             }
         }
-        return true;
+        this.scanned.add(input);
+        Log.d("returning True",input.X);
+        return false;
     }
     public boolean inputOdd(String data){
         locCod input = string_to_locCod(data);

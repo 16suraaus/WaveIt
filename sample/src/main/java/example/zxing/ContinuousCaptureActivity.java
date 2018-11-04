@@ -22,6 +22,7 @@ import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This sample performs continuous scanning, displaying the barcode and source image whenever
@@ -33,7 +34,7 @@ public class ContinuousCaptureActivity extends Activity {
     private BeepManager beepManager;
     private String lastText;
     private Spinner spinner;
-
+    private scanner sc;
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
@@ -41,12 +42,13 @@ public class ContinuousCaptureActivity extends Activity {
                 // Prevent duplicate scans
                 return;
             }
-
             lastText = result.getText();
             barcodeView.setStatusText(result.getText());
 
-            //TODO: change based on in/out of order
-            beepManager.playBeepSoundAndVibrate(true);
+            beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+
+
+
 
             //Added preview of scanned barcode
             ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
@@ -71,6 +73,8 @@ public class ContinuousCaptureActivity extends Activity {
         barcodeView.decodeContinuous(callback);
 
         beepManager = new BeepManager(this);
+
+        sc = new scanner();
     }
 
     @Override
