@@ -7,7 +7,7 @@
     <application
         android:name=".SampleApplication"
         android:allowBackup="false"
-        android:icon="@drawable/icon"
+        android:icon="@mipmap/waveit_icon_layer"
         android:label="@string/app_name">
         <activity
             android:name=".MainActivity"
