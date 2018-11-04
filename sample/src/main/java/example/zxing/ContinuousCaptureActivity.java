@@ -45,7 +45,8 @@ public class ContinuousCaptureActivity extends Activity {
             lastText = result.getText();
             barcodeView.setStatusText(result.getText());
 
-            beepManager.playBeepSoundAndVibrate();
+            //TODO: change based on in/out of order
+            beepManager.playBeepSoundAndVibrate(true);
 
             //Added preview of scanned barcode
             ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);

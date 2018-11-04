@@ -18,6 +18,6 @@ public class scanner {
     }
     public boolean inpuutOrdered(String data){
         this.scanned.add(data);
-
+        return false;
     }
 }
