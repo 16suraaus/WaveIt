@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
@@ -75,10 +76,24 @@ public class ContinuousCaptureActivity extends Activity {
 
             //beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
             if(spinner.getSelectedItem().toString().equals("Odd One Out")) {
-                beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+                try {
+                    beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+                }
+                catch(Exception e) {
+                    String message = "Error, QR code must be Library of Congress classification.";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Ordered Books")){
-                beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+                try {
+                    beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+                }
+                catch(Exception e) {
+                    String message = "Error, QR code must be Library of Congress classification.";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Drug Info")){
                 dis.add_data(lastText);
