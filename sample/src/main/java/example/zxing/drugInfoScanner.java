@@ -63,9 +63,10 @@ public class drugInfoScanner{
         } catch (Exception e){
             e.printStackTrace();
         }
+        List<drugInfo> output_array = processDrugInfo(this.json);
         String output = "";
-        for (int i = 0; i < this.output.size(); i++){
-            drugInfo curr = this.output.get(i);
+        for (int i = 0; i < output_array.size(); i++){
+            drugInfo curr = output_array.get(i);
             String[] names = curr.drugs;
             output += "Drugs are:";
             for (String name : names){
@@ -78,7 +79,36 @@ public class drugInfoScanner{
         // Remove last two newline characters
         //output = output.substring(0, output.length() - 2);
 
-        return this.json;
+        return output;
+    }
+
+    public List<drugInfo> processDrugInfo(String responseJsonData){
+        List<drugInfo> output = new ArrayList<>();
+        try{
+            JSONObject drugData = new JSONObject(responseJsonData);
+            JSONArray drugArray = drugData.getJSONArray("fullInteractionType");
+            for (int i = 0; i < drugArray.length(); i++){
+                drugInfo current = new drugInfo();
+                JSONObject tmp = drugArray.getJSONObject(i);
+                JSONArray names = tmp.getJSONArray("minConcept");
+                String[] name = new String[2];
+                for (int j = 0; j < names.length(); j++){
+                    JSONObject name_object = names.getJSONObject(i);
+                    name[j] = name_object.getString("name");
+                }
+                JSONObject indiv = tmp.getJSONObject("interactionPair");
+                String severity = indiv.getString("severity");
+                String description = indiv.getString("description");
+                current.drugs = name;
+                current.severity = severity;
+                current.interaction = description;
+                output.add(current);
+            }
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        return output;
     }
 
     public void updateDrugInfo(List<drugInfo> info){
@@ -146,8 +176,8 @@ public class drugInfoScanner{
         }   // end of class FetchNetworkData
         @Override
         protected void onPostExecute(String responseData){
-            List<drugInfo> info = processDrugInfoJson(responseData);
-            updateDrugInfo(info);
+            //List<drugInfo> info = processDrugInfoJson(responseData);
+            //updateDrugInfo(info);
             String message = "Analyzing interactions!";
             Toast.makeText(c, message, Toast.LENGTH_LONG).show();
 
