@@ -77,6 +77,9 @@ public class scanner {
         this.bookList.add(new book(input,true));
         return false;
     }
+    public ArrayList<book> getBookList(){
+        return this.bookList;
+    }
     public void clearLists() {
         this.scannedCorrect.clear();
         this.scannedWrong.clear();
