@@ -15,8 +15,6 @@ import java.util.List;
 
 import utilities.NetworkUtils;
 
-
-
 public class drugInfoScanner{
 
     Context c;
@@ -24,10 +22,9 @@ public class drugInfoScanner{
         c = context;
     }
     List<drugInfo> output = new ArrayList<>();
-    void makeSearch(String drugID){
-        new FetchNetworkData().execute(drugID);
-    }
+    List<String> drugs = new ArrayList<>();
 
+    // Drug interaction info object to return
     public class drugInfo{
         public String[] drugs;
         public String interaction;
@@ -38,18 +35,26 @@ public class drugInfoScanner{
             this.interaction = "";
             this.severity = "";
         }
-
-        public drugInfo(String[] drugs, String interaction, String severity){
-            this.drugs = drugs;
-            this.interaction = interaction;
-            this.severity = severity;
-        }
     }
-
+    // Add drug id to the current list
+    public void add_data(String drug){
+        this.drugs.add(drug);
+    }
+    public void clear_data(){
+        this.drugs.clear();
+        this.output.clear();
+    }
+    // After done inputting, search for interactions
+    public void search(){
+        String[] drugID = new String[this.drugs.size()];
+        for (int i = 0; i < this.drugs.size(); i++){
+            drugID[i] = this.drugs.get(i);
+        }
+        new FetchNetworkData().execute(drugID);
+    }
     public void updateDrugInfo(List<drugInfo> info){
         this.output = info;
     }
-
     public class FetchNetworkData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params){
