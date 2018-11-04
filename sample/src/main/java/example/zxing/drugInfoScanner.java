@@ -10,8 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import utilities.NetworkUtils;
+
+
 
 public class drugInfoScanner{
 
@@ -19,20 +23,42 @@ public class drugInfoScanner{
     public drugInfoScanner(Context context) {
         c = context;
     }
+    List<drugInfo> output = new ArrayList<>();
     void makeSearch(String drugID){
         new FetchNetworkData().execute(drugID);
+    }
+
+    public class drugInfo{
+        public String[] drugs;
+        public String interaction;
+        public String severity;
+
+        public drugInfo(){
+            this.drugs = null;
+            this.interaction = "";
+            this.severity = "";
+        }
+
+        public drugInfo(String[] drugs, String interaction, String severity){
+            this.drugs = drugs;
+            this.interaction = interaction;
+            this.severity = severity;
+        }
+    }
+
+    public void updateDrugInfo(List<drugInfo> info){
+        this.output = info;
     }
 
     public class FetchNetworkData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params){
             if (params.length == 0) return null;
-            //String searchQuery = "";
-            //for (String Drug : params){
-            //    searchQuery += Drug+"+";
-            //}
-            //searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
-            String searchQuery = "207106";
+            String searchQuery = "";
+            for (String Drug : params){
+                searchQuery += Drug+"+";
+            }
+            searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
             URL DRUGINFO_URL = NetworkUtils.buildUrl(searchQuery);
 
             String responseString = null;
@@ -41,48 +67,46 @@ public class drugInfoScanner{
             } catch(Exception e) {
                 e.printStackTrace();
             }
-            if (responseString == null){
-                Log.d("this is shit", "what is this");
-                return "there is no response";
-            }else {
-                Log.d("response Json", responseString);
-                return "there is response";
-            }
+
+            return responseString;
         }   // end of method doInBackground
 
         // parse weather data json
-        public String[] processDrugInfoJson(String responseJsonData){
-            String[] weatherInfo = new String[25];
+        public List<drugInfo> processDrugInfoJson(String responseJsonData){
+            List<drugInfo> output = new ArrayList<>();
             try{
-                JSONObject weatherData = new JSONObject(responseJsonData);
-                JSONArray weatherArray = weatherData.getJSONArray("consolidated_weather");
-                weatherInfo = new String[weatherArray.length() + 1];
-                weatherInfo[0] = weatherData.getString("title");                    // Save name of the location as first element in the array
-                for (int i = 1; i < weatherArray.length() + 1; i++){
-                    JSONObject childJson = weatherArray.getJSONObject(i - 1);
-                    String weather = childJson.getString("weather_state_name");
-                    String date = childJson.getString("applicable_date");
-                    String maxTemp = childJson.getString("max_temp");
-                    String minTemp = childJson.getString("min_temp");
-
-                    // save four data fields into a single string
-                    weatherInfo[i] = date + "\t\t" + weather + "\t\t\n" + "Max temp is " + maxTemp.substring(0, 4)
-                            + "F\t\t" + "Min temp is " + minTemp.substring(0, 4) + "F";
-                }   // end of for
+                JSONObject drugData = new JSONObject(responseJsonData);
+                JSONArray drugArray = drugData.getJSONArray("fullInteractionType");
+                for (int i = 0; i < drugArray.length(); i++){
+                    drugInfo current = new drugInfo();
+                    JSONObject tmp = drugArray.getJSONObject(i);
+                    JSONArray names = tmp.getJSONArray("minConcept");
+                    String[] name = new String[2];
+                    for (int j = 0; j < names.length(); j++){
+                        JSONObject name_object = names.getJSONObject(i);
+                        name[j] = name_object.getString("name");
+                    }
+                    JSONObject indiv = tmp.getJSONObject("interactionPair");
+                    String severity = indiv.getString("severity");
+                    String description = indiv.getString("description");
+                    current.drugs = name;
+                    current.severity = severity;
+                    current.interaction = description;
+                    output.add(current);
+                }
             }
             catch(JSONException e){
                 e.printStackTrace();
             }
-            return weatherInfo;
-
+            return output;
 
         }   // end of class FetchNetworkData
         @Override
         protected void onPostExecute(String responseData){
 
-            //String [] weathers = processDrugInfoJson(responseData);
-            String message = "You'll die";
-            Toast.makeText(c, message+responseData, Toast.LENGTH_LONG).show();
+            updateDrugInfo(processDrugInfoJson(responseData));
+            String message = "Ouput sent!";
+            Toast.makeText(c, message, Toast.LENGTH_LONG).show();
 
         }
     }
