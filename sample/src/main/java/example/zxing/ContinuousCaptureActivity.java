@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
@@ -40,11 +41,13 @@ public class ContinuousCaptureActivity extends Activity {
     private drugInfoScanner dis;
     String lastSpinnerState;
     private Button resetButton;
+    private TextView bookListText;
 
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
             if(!spinner.getSelectedItem().toString().equals(lastSpinnerState)){
+                bookListText.setText("'o' is correct, 'x' is incorrect");
                 lastText = "";
                 sc.clearLists();
             }
@@ -60,8 +63,10 @@ public class ContinuousCaptureActivity extends Activity {
             //beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
             if(spinner.getSelectedItem().toString().equals("Odd One Out")) {
                 beepManager.playBeepSoundAndVibrate(sc.inputOdd(lastText));
+                bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Ordered Books")){
                 beepManager.playBeepSoundAndVibrate(sc.inputOrdered(lastText));
+                bookListText.setText(sc.returnBookListString());
             }else if(spinner.getSelectedItem().toString().equals("Drug Info")){
                 dis.makeSearch("207106");
                 beepManager.playBeepSoundAndVibrate(false);
@@ -97,6 +102,7 @@ public class ContinuousCaptureActivity extends Activity {
         dis = new drugInfoScanner(this);
         spinner = findViewById(R.id.modeSpinner);
         lastSpinnerState = "";
+        bookListText = findViewById(R.id.bookListText);
 
         resetClicked();
     }
@@ -122,6 +128,7 @@ public class ContinuousCaptureActivity extends Activity {
             @Override
             public void onClick(View v) {
                 lastText = "";
+                bookListText.setText("'o' is correct, 'x' is incorrect");
                 sc.clearLists();
             }
         });

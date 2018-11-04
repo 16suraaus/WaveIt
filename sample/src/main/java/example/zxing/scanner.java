@@ -13,6 +13,9 @@ public class scanner {
             this.libConCode = in1;
             this.correct = in2;
         }
+        public Boolean getCorrect(){
+            return this.correct;
+        }
     }
     public class locCod<X,Y,Z> {
         public String X;
@@ -79,6 +82,18 @@ public class scanner {
     }
     public ArrayList<book> getBookList(){
         return this.bookList;
+    }
+    public String returnBookListString(){
+        String temp = "";
+        for(int i = 0;i < this.bookList.size(); i++){
+            if(this.bookList.get(i).correct){
+                temp += "o";
+            }
+            else{
+                temp+= "x";
+            }
+        }
+        return temp;
     }
     public void clearLists() {
         this.scannedCorrect.clear();
