@@ -151,7 +151,7 @@ public class ContinuousCaptureActivity extends Activity {
                         " are checked against the book.\n\nOrdered Books: Checks the sequential order of books scanned.\n\n" +
                         "" +
                         "Reset Items: clears the cache of books.\n\n" +
-                        "Drug Info: Enters Drug Safety Mode.");
+                        "Drug Info: Enters Drug Safety Mode. Scan all of your medications and press Submit when finished to view dangerous medication combinations.");
                 str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 101, 114, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 161, 174, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
