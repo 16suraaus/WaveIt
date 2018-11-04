@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import utilities.NetworkUtils;
 
@@ -23,6 +25,7 @@ public class drugInfoScanner{
     }
     List<drugInfo> output = new ArrayList<>();
     List<String> drugs = new ArrayList<>();
+    String json = "";
 
     // Drug interaction info object to return
     public class drugInfo{
@@ -56,7 +59,7 @@ public class drugInfoScanner{
 
         new FetchNetworkData().execute(drugID);
         try {
-            Thread.sleep(5000);
+            TimeUnit.SECONDS.sleep(1);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -73,13 +76,16 @@ public class drugInfoScanner{
             output += "Description: " + curr.interaction + "\n\n";
         }
         // Remove last two newline characters
-        output = output.substring(0, output.length() - 2);
+        //output = output.substring(0, output.length() - 2);
 
-        return output;
+        return this.json;
     }
 
     public void updateDrugInfo(List<drugInfo> info){
         this.output = info;
+    }
+    public void update(String input){
+        this.json = input;
     }
     public class FetchNetworkData extends AsyncTask<String, Void, String> {
 
@@ -93,7 +99,9 @@ public class drugInfoScanner{
                 searchQuery += Drug+"+";
             }
             searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
+            Log.d("searchquery", searchQuery);
             URL DRUGINFO_URL = NetworkUtils.buildUrl(searchQuery);
+            Log.d("searchquery",DRUGINFO_URL.toString());
 
             String responseString = null;
             try{
@@ -101,6 +109,8 @@ public class drugInfoScanner{
             } catch(Exception e) {
                 e.printStackTrace();
             }
+            Log.d("uniquetag", responseString);
+            update(responseString);
             return responseString;
         }   // end of method doInBackground
 

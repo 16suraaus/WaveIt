@@ -24,7 +24,7 @@ public class NetworkUtils {
         //            .build();
         URL url = null;
         try{
-            url = new URL(DRUGINFO_URL);
+            url = new URL(DRUGINFO_URL+userQuery);
             Log.d("build url", DRUGINFO_URL+userQuery);
             //Log.d("informational", "URL: " + builtUri.toString());
 
