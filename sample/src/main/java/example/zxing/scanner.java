@@ -51,7 +51,7 @@ public class scanner {
         this.scanned.add(input);
         if(this.scanned.size()==0) {
             locCod prev = this.scanned.get(this.scanned.size() - 1);
-            if(input.X.compareTo(prev.X)>=0)
+            return input.X.compareTo(prev.X)==0 && input.Y==prev.Y;
         }
         return true;
     }
